@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <!-- jQuery 스크립트 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">코스명</th>
+                <th scope="col">지역</th>
+                <th scope="col">관광지명</th>
+                <th scope="col">예보시간</th>
+                <th scope="col">하늘상태</th>
+                <th scope="col">강수량</th>
+            </tr>
+        </thead>
+        <tbody id="travle">
+
+        </tbody>
+    </table>
+    <button id="btn-show">데이터 보기</button>
+
+    <script>
+        $("#btn-show").click(()=>{
+            show();
+        });
+
+        async function show() {
+            let response = await fetch(`/weather/show?`);
+            console.log(response);
+            let responseParse = await response.json();
+            console.log(responseParse);
+
+            if (responseParse.code == 1) {
+                $("#travle").empty();
+
+                for (travleList of responseParse.data) {
+                    $("#travle").append(travleRender(travleList)); // append
+                }
+            } else {
+                alert("실패");
+            }
+        }
+
+        function travleRender(travleList) {
+            console.log(travleList.id);
+            return `<tr>
+                        <th>${travleList.courseName}</th>
+                        <td>${travleList.courseAreaName}</td>
+                        <td>${travleList.spotName}</td>
+                        <td>${travleList.tm}</td>
+                        <td>${travleList.sky}</td>
+                        <td>${travleList.pop}</td>
+                    </tr>`;
+        }
+    </script>
+</body>
+
+</html>
